@@ -1,1 +1,1 @@
-The supplied portrait is installed as elsa-portrait.jpg. robot-reference.jpg is the user-supplied style reference, animated and tinted baby pink at runtime using SVG.
+The supplied portrait is installed as elsa-portrait.jpg. The bot is an original transparent 2D SVG in src/components/ai-companion.tsx, with behavior in scroll-companion.tsx. No robot bitmap is used.

@@ -2120,87 +2120,10 @@ nextjs-portal,
   color: var(--muted);
   margin-left: 8px;
 }
-.portrait-companion {
-  position: absolute;
-  bottom: 19px;
-  right: -30px;
-  width: 140px;
-  text-align: center;
-}
-.portrait-companion > span {
-  display: block;
-  font: italic 15px/1.3 var(--font-serif);
-}
 .ai-companion {
   width: 120px;
   height: auto;
   overflow: visible;
-}
-.bot-idle {
-  animation: bot-idle 7s ease-in-out infinite;
-}
-.bot-head {
-  transform-origin: 70px 90px;
-  animation: bot-look 19s ease-in-out infinite;
-}
-.bot-wave {
-  transform-origin: 94px 110px;
-  animation: bot-wave 17s ease-in-out infinite;
-}
-.bot-eyes {
-  transform-origin: 70px 72px;
-  animation: bot-blink 8s ease-in-out infinite;
-}
-@keyframes bot-idle {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-3px);
-  }
-}
-@keyframes bot-look {
-  0%,
-  30%,
-  65%,
-  100% {
-    transform: rotate(0);
-  }
-  36%,
-  41% {
-    transform: rotate(-7deg) translateY(-2px);
-  }
-  73%,
-  79% {
-    transform: rotate(5deg);
-  }
-}
-@keyframes bot-wave {
-  0%,
-  12%,
-  25%,
-  100% {
-    transform: rotate(0);
-  }
-  15%,
-  21% {
-    transform: rotate(-16deg);
-  }
-  18% {
-    transform: rotate(9deg);
-  }
-}
-@keyframes bot-blink {
-  0%,
-  44%,
-  48%,
-  100% {
-    transform: scaleY(1);
-  }
-  46% {
-    transform: scaleY(0.1);
-  }
 }
 
 /* A conversational, private way to connect. */
@@ -2309,13 +2232,6 @@ nextjs-portal,
   .project-title {
     min-height: 75px;
   }
-  .portrait-companion {
-    right: -12px;
-    width: 110px;
-  }
-  .portrait-companion .ai-companion {
-    width: 100px;
-  }
   .contact-chat {
     padding: 20px;
   }
@@ -2330,14 +2246,6 @@ nextjs-portal,
   }
   .contact-chat {
     margin-top: 34px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .bot-idle,
-  .bot-head,
-  .bot-wave,
-  .bot-eyes {
-    animation: none;
   }
 }
 
@@ -2367,20 +2275,6 @@ nextjs-portal,
   display: block;
   filter: none;
   object-position: center 34%;
-}
-.hero-portrait .portrait-companion {
-  width: 210px;
-  right: -58px;
-  bottom: 5px;
-}
-.hero-portrait .portrait-companion .ai-companion {
-  width: 205px;
-  filter: drop-shadow(0 12px 13px #86607416);
-}
-.hero-portrait .portrait-companion > span {
-  font-size: 13px;
-  color: #79616c;
-  margin-top: -6px;
 }
 .hero-portrait figcaption {
   margin-top: 18px;
@@ -2436,130 +2330,6 @@ nextjs-portal,
   }
   to {
     transform: translate(12px, -8px) scale(1.06);
-  }
-}
-
-/* Separate arm, head and gaze cycles make the gestures easy to see. */
-.bot-idle {
-  animation: companion-float 4.8s ease-in-out infinite;
-}
-.bot-wave {
-  transform-origin: 102px 218px;
-  animation: companion-wave 7.5s ease-in-out infinite;
-}
-.bot-head {
-  transform-origin: 160px 187px;
-  animation: companion-head 12s ease-in-out infinite;
-}
-.bot-gaze {
-  animation: companion-gaze 12s ease-in-out infinite;
-}
-.bot-eyes {
-  transform-origin: 157px 119px;
-  animation: companion-blink 5.7s ease-in-out infinite;
-}
-.bot-rest-arm {
-  transform-origin: 213px 219px;
-  animation: companion-rest 4.8s ease-in-out infinite;
-}
-.bot-shadow {
-  transform-origin: 159px 339px;
-  animation: companion-shadow 4.8s ease-in-out infinite;
-}
-@keyframes companion-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-9px);
-  }
-}
-@keyframes companion-wave {
-  0%,
-  7%,
-  48%,
-  100% {
-    transform: rotate(0);
-  }
-  14%,
-  30% {
-    transform: rotate(23deg);
-  }
-  22%,
-  38% {
-    transform: rotate(-15deg);
-  }
-}
-@keyframes companion-head {
-  0%,
-  10%,
-  95%,
-  100% {
-    transform: translate(0, 0) rotate(0) skewY(0);
-  }
-  20%,
-  30% {
-    transform: translate(-5px, 0) rotate(-8deg) skewY(-3deg);
-  }
-  43%,
-  51% {
-    transform: translate(5px, 0) rotate(7deg) skewY(3deg);
-  }
-  65%,
-  77% {
-    transform: translate(0, -9px) rotate(-6deg) scaleY(0.94);
-  }
-}
-@keyframes companion-gaze {
-  0%,
-  10%,
-  95%,
-  100% {
-    transform: translate(0, 0);
-  }
-  20%,
-  30% {
-    transform: translate(-6px, 0);
-  }
-  43%,
-  51% {
-    transform: translate(6px, 0);
-  }
-  65%,
-  77% {
-    transform: translate(0, -8px);
-  }
-}
-@keyframes companion-blink {
-  0%,
-  44%,
-  49%,
-  100% {
-    transform: scaleY(1);
-  }
-  46% {
-    transform: scaleY(0.12);
-  }
-}
-@keyframes companion-rest {
-  0%,
-  100% {
-    transform: rotate(0);
-  }
-  50% {
-    transform: rotate(-5deg);
-  }
-}
-@keyframes companion-shadow {
-  0%,
-  100% {
-    transform: scaleX(1);
-    opacity: 0.15;
-  }
-  50% {
-    transform: scaleX(0.8);
-    opacity: 0.08;
   }
 }
 
@@ -2626,25 +2396,8 @@ nextjs-portal,
   .hero-portrait {
     width: 90%;
   }
-  .hero-portrait .portrait-companion {
-    right: -38px;
-    width: 180px;
-  }
-  .hero-portrait .portrait-companion .ai-companion {
-    width: 175px;
-  }
 }
 @media (max-width: 800px) {
-  .hero-portrait .portrait-companion {
-    width: 145px;
-    right: -30px;
-  }
-  .hero-portrait .portrait-companion .ai-companion {
-    width: 145px;
-  }
-  .hero-portrait .portrait-companion > span {
-    font-size: 11px;
-  }
   .email-contact-card {
     padding: 22px;
   }
@@ -2662,23 +2415,12 @@ nextjs-portal,
   .hero-portrait .portrait-frame {
     aspect-ratio: 1 / 1.05;
   }
-  .hero-portrait .portrait-companion {
-    right: -39px;
-    bottom: 2px;
-    width: 145px;
-  }
-  .hero-portrait .portrait-companion .ai-companion {
-    width: 145px;
-  }
   .hero-portrait figcaption {
     font-size: 6px;
     margin-top: 12px;
   }
   .hero-portrait figcaption span {
     margin-left: 5px;
-  }
-  .hero-portrait .portrait-companion > span {
-    font-size: 10px;
   }
   .hero-eyebrow {
     margin-bottom: 18px;
@@ -2698,13 +2440,6 @@ nextjs-portal,
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .bot-idle,
-  .bot-wave,
-  .bot-head,
-  .bot-gaze,
-  .bot-eyes,
-  .bot-rest-arm,
-  .bot-shadow,
   .neural-links path,
   .neural-node,
   .neural-wash {
@@ -2712,16 +2447,106 @@ nextjs-portal,
   }
 }
 
-/* Reference artwork uses its original coordinate system for articulation. */
-.bot-wave {
-  transform-origin: 338px 209px;
+/* Flat 2D artwork, driven by the continuous skeletal solver in companion-rig.ts. */
+.bot2 {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
 }
-.bot-head {
-  transform-origin: 402px 195px;
+.companion-anchor {
+  position: absolute;
+  display: block;
+  width: 132px;
+  height: 176px;
+  right: -28px;
+  bottom: 10px;
+  pointer-events: none;
 }
-.bot-rest-arm {
-  transform-origin: 458px 222px;
+.site-companion {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--companion-size, 132px);
+  z-index: 40;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0;
+  will-change: transform;
+  transition:
+    width 0.45s var(--ease),
+    opacity 0.25s;
 }
-.bot-shadow {
-  transform-origin: 400px 339px;
+.site-companion[data-ready='true'] {
+  opacity: 1;
+}
+.site-companion .bot2 {
+  width: 100%;
+}
+.companion-patrol {
+  will-change: transform;
+}
+.companion-bubble {
+  position: absolute;
+  right: 85%;
+  top: 0;
+  width: 145px;
+  padding: 9px 12px;
+  border: 1px solid #dfcdd6;
+  border-radius: 13px 13px 3px 13px;
+  background: #fbf7f9f2;
+  color: #79616d;
+  font: italic 14px/1.4 var(--font-serif);
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+}
+.site-companion[data-reacting='true'] .companion-bubble {
+  opacity: 1;
+  transform: translateY(0);
+}
+.site-companion[data-mode='hero'] .companion-bubble {
+  top: 100%;
+  bottom: auto;
+  right: -7px;
+  width: 175px;
+  border: 0;
+  background: none;
+  text-align: center;
+}
+@media (max-width: 1100px) {
+  .companion-anchor {
+    right: -24px;
+  }
+}
+@media (max-width: 600px) {
+  .companion-anchor {
+    width: 112px;
+    height: 149px;
+    right: -19px;
+    bottom: 7px;
+  }
+  .companion-bubble {
+    width: 115px;
+    font-size: 12px;
+    padding: 7px 9px;
+    top: -30px;
+    right: 64%;
+  }
+  .site-companion[data-mode='hero'] .companion-bubble {
+    font-size: 11px;
+    width: 150px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-companion {
+    transition: none;
+  }
+  .site-companion *,
+  .bot2 * {
+    animation: none !important;
+    transition: none !important;
+  }
 }
