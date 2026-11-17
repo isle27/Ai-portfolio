@@ -66,64 +66,24 @@ test('case study and unknown route behave correctly', async ({ page }) => {
     'off the map',
   );
 });
-test('contact reports unavailable database without claiming success', async ({
+test('contact uses direct email links without a form or chat', async ({
   page,
 }) => {
   await page.goto('/#contact');
-  await page.getByRole('tab', { name: 'Chatbot', exact: true }).click();
-  await page
-    .getByRole('tabpanel')
-    .getByLabel('Your name', { exact: true })
-    .fill('Alex Morgan');
-  await page.getByRole('button', { name: 'Continue', exact: true }).click();
-  await page
-    .getByRole('tabpanel')
-    .getByLabel('Email address', { exact: true })
-    .fill('alex@example.com');
-  await page.getByRole('button', { name: 'Continue', exact: true }).click();
-  await page
-    .getByRole('tabpanel')
-    .getByLabel('A little about your idea', { exact: true })
-    .fill('I would like to collaborate on a thoughtful AI product.');
-  await page.getByRole('button', { name: 'Continue', exact: true }).click();
-  await page.getByRole('button', { name: 'Send message', exact: true }).click();
-  await expect(page.getByRole('status')).toContainText(
-    'temporarily unavailable',
+  const contact = page.locator('#contact');
+  await expect(contact.getByRole('tab')).toHaveCount(0);
+  await expect(contact.getByRole('log')).toHaveCount(0);
+  await expect(contact.locator('form, input, textarea')).toHaveCount(0);
+  await expect(contact.getByText(/chatbot|telegram|send message/i)).toHaveCount(
+    0,
   );
-});
-
-test('email and chatbot remain separate, keyboard-accessible contact options', async ({
-  page,
-}) => {
-  await page.goto('/#contact');
-  const emailTab = page.getByRole('tab', { name: 'Email / contact form' });
-  await expect(emailTab).toHaveAttribute('aria-selected', 'true');
-  await page
-    .getByRole('tabpanel')
-    .getByLabel('Your name', { exact: true })
-    .fill('Alex Morgan');
-  await page
-    .getByRole('tabpanel')
-    .getByLabel('Email address', { exact: true })
-    .fill('alex@example.com');
-  await page
-    .getByRole('tabpanel')
-    .getByLabel('A little about your idea', { exact: true })
-    .fill('A thoughtful collaboration on a useful AI system.');
-  await page.getByRole('button', { name: 'Send message', exact: true }).click();
-  await expect(page.getByRole('status')).toContainText(
-    'temporarily unavailable',
-  );
-  await emailTab.focus();
-  await page.keyboard.press('ArrowRight');
-  await expect(
-    page.getByRole('tab', { name: 'Chatbot', exact: true }),
-  ).toBeFocused();
-  await expect(page.getByRole('log')).toBeVisible();
-  await page.getByRole('tab', { name: 'Email / contact form' }).click();
-  await expect(
-    page.getByRole('tabpanel').getByLabel('Your name', { exact: true }),
-  ).toHaveValue('Alex Morgan');
+  const links = contact.locator('a[href^="mailto:"]');
+  for (const link of await links.all()) {
+    await expect(link).toBeVisible();
+    const email = (await link.getAttribute('href'))!.slice(7);
+    expect(email).not.toBe('');
+    await expect(link).toContainText(email);
+  }
 });
 
 test('the complete character turns with its face, retains volume, and walks in either direction', async ({
