@@ -51,7 +51,7 @@ Projects use dynamic server rendering to reflect database edits immediately. Fil
 
 ## Deployment
 
-Deploy to a Node-compatible Next.js host such as Vercel. Connect this repository, use the Next.js preset, set all environment variables from .env.example, and run migrations against the production Neon branch before the first release. Use a separate Neon branch for preview deployments. The standard build command is npm run build; output is the .next-production server build (isolated from the .next development cache), not a static export. NEXT_PUBLIC_* values are embedded at build time, so rebuild after changing them. Keep DATABASE_URL in the host’s secret manager. No deployment or hosted Neon resource is created by this repository.
+Deploy to a Node-compatible Next.js host such as Vercel. Connect this repository, use the Next.js preset, set all environment variables from .env.example, and run migrations against the production Neon branch before the first release. Use a separate Neon branch for preview deployments. The standard build command is npm run build; Vercel uses its standard .next output directory; local production builds use .next-production to stay separate from the development cache. This is a server build, not a static export. In Vercel, keep Framework Preset set to Next.js and disable any Output Directory override. NEXT_PUBLIC_* values are embedded at build time, so rebuild after changing them. Keep DATABASE_URL in the host’s secret manager. No deployment or hosted Neon resource is created by this repository.
 
 ## Verification
 

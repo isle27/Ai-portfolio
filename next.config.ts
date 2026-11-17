@@ -1,7 +1,14 @@
 import type { NextConfig } from 'next';
 const config: NextConfig = {
   poweredByHeader: false,
-  distDir: process.env.NODE_ENV === 'production' ? '.next-production' : '.next',
+  // Vercel inspects config before the production build as well as during it.
+  // Use its standard directory in both phases; isolate local builds from dev.
+  distDir:
+    process.env.VERCEL === '1'
+      ? '.next'
+      : process.env.NODE_ENV === 'production'
+        ? '.next-production'
+        : '.next',
   devIndicators: false,
   async headers() {
     return [
