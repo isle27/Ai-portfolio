@@ -472,6 +472,7 @@ svg {
   --art-ink: #7f6546;
   --art-shade: #d8c6aa;
 }
+.project-cover { object-fit: cover; }
 .art-1 {
   --art-bg: #e1e7dc;
   --art-line: #96a188;

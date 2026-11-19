@@ -47,7 +47,7 @@ export default async function ProjectPage({
         </h1>
         <p>{p.description}</p>
       </div>
-      <ProjectArt index={data.projects.indexOf(p) % 4} />
+      <ProjectArt index={data.projects.indexOf(p) % 4} image={p.image} title={p.title} />
       <div className="detail-grid">
         <article>
           <span className="eyebrow">THE IDEA</span>

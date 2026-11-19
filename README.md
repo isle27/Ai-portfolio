@@ -10,17 +10,15 @@ Requires Node.js 22+ and npm. On Windows PowerShell use npm.cmd if script execut
 2. Copy .env.example to .env.local.
 3. Run npm run dev and open http://localhost:3000.
 
-Without DATABASE_URL, the site runs in explicitly labeled preview mode with four illustrative project concepts. With a configured database, projects are read from Neon on each request; database errors show a graceful unavailable state rather than silently substituting sample content.
+Without DATABASE_URL, the site runs in preview mode. For live projects, point DATABASE_URL at the same Neon database and branch as Portfolio Studio and run the dashboard's schema.sql there. The site reads published projects assigned to AI Engineering from public.portfolio_published_projects, in dashboard order. The legacy setup and seed scripts still target the old public.projects table.
 
 ## Neon setup
 
-1. Create a project at https://console.neon.tech and copy its pooled Postgres connection URL, including sslmode=require, to DATABASE_URL in .env.local. Keep credentials server-only.
-2. Run npm run db:setup to create missing tables and add missing publication/order columns safely, or npm run db:migrate to also record/apply versioned migrations. The app also performs this setup automatically before its first database operation; tables do not need to exist beforehand.
-3. Optionally run npm run db:seed to insert sample projects. This preserves existing records. Samples remain labeled as concepts.
-4. Use npm run db:studio to edit project data. New projects default to unpublished. Set published=true when reviewed, sample=false only for verified work, and use real HTTPS github_url and demo_url values. Only published=true records are fetched. Lower position values appear first; slug ascending breaks ties, so the order is deterministic. Keep slugs URL-safe and stable.
-5. For schema changes, update src/db/schema.ts, run npm run db:generate, review the generated SQL, and run npm run db:migrate.
+1. Use the same Neon project, database, and branch as Portfolio Studio and SE-Portfolio. Run Portfolio Studio?s schema.sql there before deploying.
+2. Set DATABASE_URL in .env.local for development and in the host?s server-side Production environment for the deployed site. A reader role only needs SELECT on public.portfolio_published_projects.
+3. Add projects from Portfolio Studio and assign them to AI Engineering. Published projects and their order come from the shared view.
 
-Tables: public.projects, public.contact_submissions, public.contact_rate_limits. Setup uses CREATE TABLE IF NOT EXISTS and additive ALTER TABLE statements in a locked transaction. Existing records and unrelated tables are preserved. Missing published columns are boolean NOT NULL DEFAULT false; legacy NULL values become false. Nothing is automatically seeded or published. A non-boolean existing published column fails setup without converting data. The shared connection role must have CREATE/ALTER permissions for these tables. Initialization is cached per server process, and failures are retried on later requests. Drizzle migration history uses drizzle.elsa_wubie_migrations, separate from other apps’ default journals. These standard public table names are deliberately retained for compatibility; compatible portfolios using them share the same records. Legacy contact tables are retained for database compatibility; the current site uses only direct email links and does not accept contact submissions.
+The legacy Drizzle scripts maintain public.projects and the former contact tables. They do not manage the shared project library.
 
 ## Personalize before publishing
 
@@ -51,11 +49,11 @@ Projects use dynamic server rendering to reflect database edits immediately. Fil
 
 ## Deployment
 
-Deploy to a Node-compatible Next.js host such as Vercel. Connect this repository, use the Next.js preset, set all environment variables from .env.example, and run migrations against the production Neon branch before the first release. Use a separate Neon branch for preview deployments. The standard build command is npm run build; Vercel uses its standard .next output directory; local production builds use .next-production to stay separate from the development cache. This is a server build, not a static export. In Vercel, keep Framework Preset set to Next.js and disable any Output Directory override. NEXT_PUBLIC_* values are embedded at build time, so rebuild after changing them. Keep DATABASE_URL in the host’s secret manager. No deployment or hosted Neon resource is created by this repository.
+Deploy to a Node-compatible Next.js host such as Vercel. Connect this repository, use the Next.js preset, set all environment variables from .env.example, and apply Portfolio Studio?s schema.sql to the production Neon database before the first release. Use a separate Neon branch for preview deployments. The standard build command is npm run build; Vercel uses its standard .next output directory; local production builds use .next-production to stay separate from the development cache. This is a server build, not a static export. In Vercel, keep Framework Preset set to Next.js and disable any Output Directory override. NEXT_PUBLIC_* values are embedded at build time, so rebuild after changing them. Keep DATABASE_URL in the host’s secret manager. No deployment or hosted Neon resource is created by this repository.
 
 ## Verification
 
-Run npm run typecheck, npm run lint, npm test, and npm run build. For a live integration check, configure a disposable Neon branch, run migration and seed, open the site, filter projects, visit a detail page, and verify the email links open the correct recipient in your email app. Check keyboard-only navigation, reduced motion, 360px mobile and wide desktop layouts before release. Database tests use an isolated PGlite PostgreSQL engine to verify first-time setup, repeatability, existing-table upgrades, shared-data preservation, draft filtering, and deterministic ordering. They never connect to Neon. Live Neon verification still requires credentials.
+Run npm run typecheck, npm run lint, npm test, and npm run build. For a live integration check, configure a disposable Neon branch, apply Portfolio Studio?s migration, add and publish an AI project in the dashboard, open the site, filter projects, visit a detail page, and verify the email links open the correct recipient in your email app. Check keyboard-only navigation, reduced motion, 360px mobile and wide desktop layouts before release. Database tests use an isolated PGlite PostgreSQL engine to verify first-time setup, repeatability, existing-table upgrades, shared-data preservation, draft filtering, and deterministic ordering. They never connect to Neon. Live Neon verification still requires credentials.
 
 Design decisions: regular-weight literary serif headings; a small signature wordmark; original folded-paper artwork; softly toned system diagrams; balanced project pairs; open expertise layouts; warm, closely related surfaces; visible keyboard focus states; and reduced-motion support. Useful references: [Next.js 15 data security](https://nextjs.org/docs/15/app/guides/data-security) and [Drizzle with Neon](https://orm.drizzle.team/docs/connect-neon).
 

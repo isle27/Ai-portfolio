@@ -1,27 +1,25 @@
 import 'server-only';
-import { getReadyDb } from '@/db';
-import { publishedProjectQuery } from '@/db/project-query';
-import { projects } from '@/db/schema';
-import { sampleProjects } from './sample-projects';
+import { sql } from 'drizzle-orm';
+import { getDb } from '@/db';
+import type { Project } from '@/db/schema';
 export async function getProjects() {
   if (!process.env.DATABASE_URL)
-    return {
-      projects: sampleProjects
-        .filter((p) => p.published === true)
-        .sort(
-          (a, b) => a.position - b.position || a.slug.localeCompare(b.slug),
-        ),
-      mode: 'preview' as const,
-    };
+    return { projects: [], mode: 'error' as const };
   try {
-    const db = await getReadyDb();
-    const query = publishedProjectQuery();
+    const result = await getDb().execute<Project & { image: string }>(sql`
+      SELECT project_slug AS slug, title, description,
+        CASE WHEN show_on_se AND image LIKE '/%' THEN 'https://elsadev.chanyalew.com' || image ELSE image END AS image,
+        COALESCE(NULLIF(ai_category, ''), 'Project') AS category,
+        COALESCE(NULLIF(ai_overview, ''), description) AS overview,
+        technologies AS stack, ai_outcomes AS outcomes,
+        github AS "githubUrl", live AS "demoUrl", sort_order AS position,
+        true AS published, ai_sample AS sample
+      FROM public.portfolio_published_projects
+      WHERE show_on_ai
+      ORDER BY sort_order, id
+    `);
     return {
-      projects: await db
-        .select()
-        .from(projects)
-        .where(query.where)
-        .orderBy(...query.orderBy),
+      projects: result.rows,
       mode: 'live' as const,
     };
   } catch {

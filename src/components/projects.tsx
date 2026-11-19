@@ -9,8 +9,8 @@ export function Projects({
   projects,
   mode,
 }: {
-  projects: Project[];
-  mode: 'preview' | 'live' | 'error';
+  projects: (Project & { image?: string })[];
+  mode: 'live' | 'error';
 }) {
   const [category, setCategory] = useState('All work');
   const categories = ['All work', ...new Set(projects.map((p) => p.category))];
@@ -38,12 +38,6 @@ export function Projects({
             </p>
           </div>
         </Reveal>
-        {mode === 'preview' && (
-          <p className="preview-note">
-            A collection of illustrative project concepts. Case studies are
-            examples, not claims of shipped work.
-          </p>
-        )}
         <div className="filters" role="group" aria-label="Filter projects">
           {categories.map((c) => (
             <button
@@ -59,7 +53,7 @@ export function Projects({
           {visible.map((p) => (
             <Reveal key={p.slug}>
               <Link href={'/projects/' + p.slug} className="project-card">
-                <ProjectArt index={projects.indexOf(p) % 4} />
+                <ProjectArt index={projects.indexOf(p) % 4} image={p.image} title={p.title} />
                 <div className="project-meta">
                   <span>{p.category}</span>
                   <span>{p.sample ? 'CONCEPT STUDY' : 'CASE STUDY'}</span>

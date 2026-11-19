@@ -1,4 +1,13 @@
-export function ProjectArt({ index = 0 }: { index?: number }) {
+import Image from 'next/image';
+
+export function ProjectArt({ index = 0, image, title }: { index?: number; image?: string; title?: string }) {
+  if (image && /^(https:\/\/|data:image\/(?:webp|jpeg|png);base64,|\/(?![\\/]))/i.test(image)) {
+    return (
+      <div className="project-art">
+        <Image src={image} alt={title ? title + ' cover' : 'Project cover'} fill unoptimized className="project-cover" />
+      </div>
+    );
+  }
   const n = index % 4;
   const id = 'project-study-' + n;
   return (
