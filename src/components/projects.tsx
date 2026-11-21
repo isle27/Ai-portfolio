@@ -52,8 +52,17 @@ export function Projects({
         <div className="project-grid">
           {visible.map((p) => (
             <Reveal key={p.slug}>
-              <Link href={'/projects/' + p.slug} className="project-card">
-                <ProjectArt index={projects.indexOf(p) % 4} image={p.image} title={p.title} />
+              <Link
+                href={'/projects/' + encodeURIComponent(p.slug)}
+                className="project-card"
+                prefetch={false}
+              >
+                <ProjectArt
+                  index={projects.indexOf(p) % 4}
+                  image={p.image}
+                  title={p.title}
+                  fitToWidth
+                />
                 <div className="project-meta">
                   <span>{p.category}</span>
                   <span>{p.sample ? 'CONCEPT STUDY' : 'CASE STUDY'}</span>

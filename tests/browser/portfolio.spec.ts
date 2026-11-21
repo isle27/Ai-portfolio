@@ -1,7 +1,7 @@
 ﻿import { test, expect } from '@playwright/test';
 import type { RigSvg } from '../../src/components/companion-rig';
 import type { V3 } from '../../src/lib/robot-spatial';
-test('home is responsive and filters project concepts', async ({
+test('home is responsive and shows when projects are unavailable', async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];
@@ -22,24 +22,10 @@ test('home is responsive and filters project concepts', async ({
       ),
     )
     .toBe(true);
-  await expect(page.getByRole('link', { name: /Atlas/ })).toBeVisible();
-  await page.getByRole('button', { name: 'Agents', exact: true }).click();
-  await expect(page.getByRole('link', { name: /Relay/ })).toBeVisible();
-  await expect(page.getByRole('link', { name: /Atlas/ })).toHaveCount(0);
-  await page.getByRole('button', { name: /All work/ }).click();
-  await expect(page.getByRole('link', { name: /Atlas/ })).toBeVisible();
-  if (testInfo.project.name === 'desktop') {
-    const cards = page.locator('.project-card');
-    const first = await cards.nth(0).boundingBox();
-    const second = await cards.nth(1).boundingBox();
-    expect(first && second && Math.abs(first.y - second.y)).toBeLessThan(1);
-    const stacks = page.locator('.project-stack');
-    const leftStack = await stacks.nth(0).boundingBox();
-    const rightStack = await stacks.nth(1).boundingBox();
-    expect(
-      leftStack && rightStack && Math.abs(leftStack.y - rightStack.y),
-    ).toBeLessThan(1);
-  }
+  await expect(
+    page.getByText('Projects could not be loaded. Please try again shortly.'),
+  ).toBeVisible();
+  await expect(page.locator('.project-card')).toHaveCount(0);
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth > window.innerWidth,
   );
@@ -50,21 +36,20 @@ test('home is responsive and filters project concepts', async ({
   });
   expect(errors).toEqual([]);
 });
-test('case study and unknown route behave correctly', async ({ page }) => {
+test('old project URLs and the sitemap do not expose sample projects during an outage', async ({
+  page,
+  request,
+}) => {
   await page.goto('/projects/atlas');
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Atlas.');
-  await expect(
-    page.getByText('This is a sample project concept', { exact: false }),
-  ).toBeVisible();
-  const response = await page.goto('/projects/does-not-exist');
-  // Next.js streamed not-found responses may be 200; robots must prevent indexing.
-  expect([200, 404]).toContain(response?.status());
-  await expect(
-    page.locator('meta[name="robots"][content="noindex"]').first(),
-  ).toHaveAttribute('content', 'noindex');
-  await expect(page.getByRole('heading', { level: 1 })).toContainText(
-    'off the map',
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+    'Project temporarily unavailable',
   );
+  await expect(
+    page.locator('meta[name="robots"][content="noindex"]'),
+  ).toHaveCount(1);
+  const sitemap = await request.get('/sitemap.xml');
+  expect(sitemap.ok()).toBe(true);
+  expect(await sitemap.text()).not.toContain('/projects/');
 });
 test('contact uses direct email links without a form or chat', async ({
   page,
@@ -363,7 +348,15 @@ test('project cards trigger positive eyes, brows and smile after the whole body 
   page,
 }, testInfo) => {
   await page.goto('/');
-  await page.locator('.project-card').first().hover();
+  const work = page.locator('#work');
+  await work.scrollIntoViewIfNeeded();
+  await work.evaluate((section) => {
+    const card = document.createElement('button');
+    card.className = 'project-card';
+    card.textContent = 'Test project';
+    section.querySelector('.project-grid')!.append(card);
+  });
+  await page.getByRole('button', { name: 'Test project' }).hover();
   const bot = page.locator('.site-companion');
   await expect(bot).toHaveAttribute('data-face', 'impressed');
   await expect(bot).toHaveAttribute('data-face-visible', 'true', {

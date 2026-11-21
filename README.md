@@ -10,7 +10,7 @@ Requires Node.js 22+ and npm. On Windows PowerShell use npm.cmd if script execut
 2. Copy .env.example to .env.local.
 3. Run npm run dev and open http://localhost:3000.
 
-Without DATABASE_URL, the site runs in preview mode. For live projects, point DATABASE_URL at the same Neon database and branch as Portfolio Studio and run the dashboard's schema.sql there. The site reads published projects assigned to AI Engineering from public.portfolio_published_projects, in dashboard order. The legacy setup and seed scripts still target the old public.projects table.
+Point `DATABASE_URL` at the same Neon database and branch as Portfolio Studio and SE-Portfolio. The AI home page, project details, and sitemap read `public.portfolio_published_projects`, filter by `show_on_ai`, and sort by `sort_order, id`. Without a working database connection, the site shows that projects are unavailable. With a working connection and zero published AI projects, it shows the empty state. The legacy setup and seed scripts still target the old `public.projects` table.
 
 ## Neon setup
 

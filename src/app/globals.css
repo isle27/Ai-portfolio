@@ -2041,7 +2041,6 @@ nextjs-portal,
   }
 }
 
-/* Aligned project pairs, with content and technology rows sharing a baseline. */
 .project-grid > div:nth-child(even) {
   padding-top: 0;
 }
@@ -2050,14 +2049,32 @@ nextjs-portal,
   display: flex;
 }
 .project-card {
+  --card-inset: clamp(18px, 3vw, 32px);
   width: 100%;
   display: flex;
   flex-direction: column;
   height: 100%;
+  padding-bottom: var(--card-inset);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: clamp(14px, 2vw, 24px);
+  background: var(--paper, #faf8f4);
 }
+.project-card-image,
 .project-card .project-art {
   flex: none;
   width: 100%;
+}
+.project-card-image {
+  display: block;
+  height: auto;
+}
+.project-card .project-art {
+  border: 0;
+  border-radius: 0;
+}
+.project-card > :is(.project-meta, .project-title, p, .project-stack) {
+  margin-inline: var(--card-inset);
 }
 .project-title {
   min-height: 48px;

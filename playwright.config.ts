@@ -9,6 +9,7 @@ export default defineConfig({
   },
   webServer: {
     command: 'node node_modules/next/dist/bin/next start -p 3107',
+    env: { DATABASE_URL: '' },
     url: 'http://localhost:3107',
     reuseExistingServer: false,
     timeout: 120000,

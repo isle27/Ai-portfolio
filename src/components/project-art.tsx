@@ -1,10 +1,27 @@
 import Image from 'next/image';
 
-export function ProjectArt({ index = 0, image, title }: { index?: number; image?: string; title?: string }) {
+export function ProjectArt({
+  index = 0,
+  image,
+  title,
+  fitToWidth = false,
+}: {
+  index?: number;
+  image?: string;
+  title?: string;
+  fitToWidth?: boolean;
+}) {
   if (image && /^(https:\/\/|data:image\/(?:webp|jpeg|png);base64,|\/(?![\\/]))/i.test(image)) {
+    const alt = title ? title + ' cover' : 'Project cover';
+    if (fitToWidth) {
+      // Card images can come from uploads or URLs without width and height metadata.
+      // eslint-disable-next-line @next/next/no-img-element
+      return <img className="project-card-image" src={image} alt={alt} loading="lazy" decoding="async" />;
+    }
+
     return (
       <div className="project-art">
-        <Image src={image} alt={title ? title + ' cover' : 'Project cover'} fill unoptimized className="project-cover" />
+        <Image src={image} alt={alt} fill unoptimized className="project-cover" />
       </div>
     );
   }

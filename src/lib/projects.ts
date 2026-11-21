@@ -1,8 +1,9 @@
 import 'server-only';
+import { cache } from 'react';
 import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
 import type { Project } from '@/db/schema';
-export async function getProjects() {
+export const getProjects = cache(async function getProjects() {
   if (!process.env.DATABASE_URL)
     return { projects: [], mode: 'error' as const };
   try {
@@ -26,4 +27,4 @@ export async function getProjects() {
     console.error('Project query failed');
     return { projects: [], mode: 'error' as const };
   }
-}
+});

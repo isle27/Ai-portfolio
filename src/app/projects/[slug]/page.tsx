@@ -17,7 +17,9 @@ export async function generateMetadata({
   return {
     title: p?.title || 'Project unavailable',
     description: p?.description,
-    alternates: { canonical: '/projects/' + slug },
+    ...(p
+      ? { alternates: { canonical: '/projects/' + encodeURIComponent(p.slug) } }
+      : { robots: { index: false } }),
   };
 }
 export default async function ProjectPage({
@@ -27,7 +29,17 @@ export default async function ProjectPage({
 }) {
   const { slug } = await params;
   const data = await getProjects();
-  if (data.mode === 'error') throw new Error('Projects unavailable');
+  if (data.mode === 'error') {
+    return (
+      <main id="main" className="shell state-page">
+        <h1>Project temporarily unavailable</h1>
+        <p>Projects could not be loaded. Please try again shortly.</p>
+        <Link href="/#work" className="text-link">
+          Back to selected work
+        </Link>
+      </main>
+    );
+  }
   const p = data.projects.find((p) => p.slug === slug);
   if (!p) notFound();
   const github = safeExternalUrl(p.githubUrl),
@@ -47,7 +59,11 @@ export default async function ProjectPage({
         </h1>
         <p>{p.description}</p>
       </div>
-      <ProjectArt index={data.projects.indexOf(p) % 4} image={p.image} title={p.title} />
+      <ProjectArt
+        index={data.projects.indexOf(p) % 4}
+        image={p.image}
+        title={p.title}
+      />
       <div className="detail-grid">
         <article>
           <span className="eyebrow">THE IDEA</span>

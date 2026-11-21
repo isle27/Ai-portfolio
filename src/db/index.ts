@@ -6,7 +6,12 @@ import { ensureDatabase } from './setup';
 export function getDb() {
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error('Database is not configured');
-  return drizzle(neon(url), { schema });
+  return drizzle(
+    neon(url, { fetchOptions: { signal: AbortSignal.timeout(5000) } }),
+    {
+      schema,
+    },
+  );
 }
 
 export async function getReadyDb() {
